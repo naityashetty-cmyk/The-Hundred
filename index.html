@@ -2,207 +2,328 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Hundred Pro | Ultimate Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>THE HUNDRED | MASTER MANAGER 2026</title>
     <style>
-        :root { --primary: #00f2fe; --accent: #f1c40f; --danger: #ff4b2b; --glass: rgba(15, 20, 30, 0.95); }
-        body { margin:0; font-family: 'Inter', sans-serif; color:white; text-align:center; background: #05070a; overflow-x:hidden; }
-        .overlay { 
-            min-height:100vh; padding:20px; 
-            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), 
-                        url('https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=2000');
-            background-size: cover; background-position: center; background-attachment: fixed;
-            display: flex; flex-direction: column; align-items: center;
+        :root { --primary: #00f2fe; --accent: #f1c40f; --orange: #ff9f43; --purple: #a55eea; --glass: rgba(10, 15, 25, 0.95); --gold: linear-gradient(45deg, #f1c40f, #d4af37); }
+        
+        body { 
+            margin:0; font-family: 'Arial Black', sans-serif; color:white; 
+            background: #000 url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2000&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden;
         }
-        .glass-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 30px; width: 90%; max-width: 500px; margin-top: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
-        .score-big { font-size: 64px; font-weight: 900; margin: 5px 0; color: #fff; text-shadow: 0 0 20px var(--primary); }
-        .btn-main { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; border: none; padding: 14px 35px; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 15px; width: 100%; transition: 0.3s; }
-        .btn-main:hover { transform: scale(1.02); box-shadow: 0 0 15px var(--primary); }
-        .num-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
-        .num-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 18px; border-radius: 16px; font-size: 22px; cursor: pointer; transition: 0.2s; }
-        .num-btn:hover { background: var(--primary); color: #000; }
-        .player-list { text-align: left; max-height: 250px; overflow-y: auto; margin: 15px 0; border: 1px solid #333; border-radius: 10px; }
-        .player-item { padding: 12px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; cursor: pointer; }
-        .player-item:hover { background: var(--primary); color: black; }
-        .team-pill { padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; }
-        #gameArea, #tossArea, #teamSelect, #selectorView, #modeSelect { display:none; }
+
+        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.9) 100%); z-index: -1; transition: 0.3s; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-4px, 4px); } 50% { transform: translate(4px, -4px); } 75% { transform: translate(-4px, -4px); } }
+        .animate-in { animation: fadeInUp 0.5s ease forwards; }
+        .hit-shake { animation: shake 0.3s; }
+
+        #authGate { position: fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:99999; display:flex; align-items:center; justify-content:center; }
+        .card { 
+            background: var(--glass); border: 2px solid rgba(255,255,255,0.1); border-radius: 30px; 
+            padding: 25px; width: 90%; max-width: 400px; text-align: center; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8); backdrop-filter: blur(15px); position: relative;
+        }
+
+        #mainApp { display: none; width: 100%; flex-direction: column; align-items: center; }
+        input, select { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; font-family: sans-serif; }
+        
+        .btn { background: var(--primary); color: #000; border: none; padding: 16px; border-radius: 15px; font-weight: 900; width: 100%; cursor: pointer; text-transform: uppercase; margin-top: 10px; transition: 0.3s; }
+        .btn-logout { position: absolute; top: 15px; right: 15px; width: auto; padding: 5px 10px; font-size: 10px; background: #ff4757; color: white; border-radius: 8px; }
+
+        .nav { display:flex; justify-content: space-around; margin: 15px 0; border-bottom: 1px solid #444; padding-bottom: 10px; width: 100%; }
+        .nav span { cursor:pointer; opacity: 0.5; font-size: 10px; letter-spacing: 1px; }
+        .nav .active { opacity: 1; color: var(--primary); border-bottom: 2px solid var(--primary); }
+
+        .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+        .num-btn { background: #fff; color: #000; border: none; padding: 20px 0; border-radius: 15px; font-size: 26px; font-weight: 900; box-shadow: 0 6px 0 #999; cursor: pointer; }
+        .num-btn:active { box-shadow: 0 0px 0 #999; transform: translateY(6px); }
+
+        .list-item { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); color: white; border-radius: 12px; margin-bottom: 8px; cursor: pointer; border: 1px solid #444; display: flex; justify-content: space-between; box-sizing: border-box; font-size: 14px; }
+        .selected { border: 2px solid var(--primary); background: rgba(0, 242, 254, 0.2); }
+
+        #matchScreen, #teamSelection, #playerPicker, #dashboard, #squadSetup { display:none; }
     </style>
 </head>
-<body>
+<body onload="checkLogin()">
 
-<div class="overlay">
-    <h2 style="letter-spacing: 5px; font-weight: 900; margin-top: 20px; color:var(--primary)">THE HUNDRED PRO</h2>
+<div class="overlay" id="flashLayer"></div>
 
-    <div id="loginArea" class="glass-card">
-        <h3>MANAGER LOGIN</h3>
-        <input type="text" id="mgrName" placeholder="Manager Name" style="padding:15px; width:85%; border-radius:12px; border:none; background:rgba(255,255,255,0.05); color:white; outline:none; margin-bottom:10px;">
-        <button class="btn-main" onclick="handleLogin()">Join Stadium</button>
+<div id="authGate">
+    <div class="card animate-in">
+        <h1 style="color:var(--primary); font-style: italic; margin:0;">THE HUNDRED</h1>
+        <p style="font-size: 10px; color: #666; letter-spacing: 3px; margin-bottom: 20px;">MANAGER ACCESS</p>
+        <input type="text" id="uIn" placeholder="Username">
+        <input type="password" id="pIn" placeholder="Password">
+        <button class="btn" onclick="handleAuth('login')">LOGIN</button>
+        <button class="btn" style="background:#222; color:#fff;" onclick="handleAuth('reg')">REGISTER</button>
+    </div>
+</div>
+
+<div id="mainApp">
+    <div id="teamSelection" class="card animate-in">
+        <h3 style="margin:0 0 20px 0;">PICK YOUR FRANCHISE</h3>
+        <div id="teamGrid"></div>
     </div>
 
-    <div id="modeSelect" class="glass-card">
-        <h3>SELECT MODE</h3>
-        <button class="btn-main" onclick="setMode('CPU')">Player vs Computer</button>
-        <button class="btn-main" style="background: #6c5ce7" onclick="setMode('PVP')">Local Multiplayer (P2P)</button>
+    <div id="dashboard" class="card animate-in">
+        <button class="btn btn-logout" onclick="logout()">LOGOUT</button>
+        <h2 id="dashTeam" style="color:var(--accent); margin:0; text-align:left;">-</h2>
+        <div id="matchLog" style="font-size:11px; text-align:left; color:var(--primary);">SEASON MATCH: 1 / 5</div>
+        
+        <div class="nav">
+            <span id="tab-t" class="active" onclick="showTab('table')">TABLE</span>
+            <span id="tab-s" onclick="showTab('stats')">CAPS</span>
+            <span id="tab-m" onclick="showTab('market')">MARKET</span>
+        </div>
+
+        <div id="view-table"><table style="width:100%; font-size:13px;"><tbody id="tableBody"></tbody></table></div>
+        
+        <div id="view-stats" style="display:none; padding-top:10px;">
+            <div style="border:1px solid var(--orange); padding:10px; border-radius:15px; margin-bottom:10px; background:rgba(255,159,67,0.1);"><small style="color:var(--orange)">ORANGE CAP</small><br><b id="orangeCap">-</b></div>
+            <div style="border:1px solid var(--purple); padding:10px; border-radius:15px; background:rgba(165,94,234,0.1);"><small style="color:var(--purple)">PURPLE CAP</small><br><b id="purpleCap">-</b></div>
+        </div>
+
+        <div id="view-market" style="display:none; text-align:left; padding-top:10px;">
+            <label style="font-size:10px; color:var(--primary)">RELEASE PLAYER</label>
+            <select id="sellP"></select>
+            <label style="font-size:10px; color:var(--accent)">SIGN STAR</label>
+            <select id="buyP"></select>
+            <button class="btn" style="background:#fff; color:#000; font-size:12px;" onclick="executeTrade()">SWAP PLAYERS</button>
+        </div>
+
+        <button id="playBtn" class="btn" style="margin-top:25px; background:var(--accent);" onclick="openSquad()">NEXT MATCH</button>
     </div>
 
-    <div id="teamSelect" class="glass-card">
-        <h3>CHOOSE FRANCHISE</h3>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <div class="team-pill" style="background:#004ba0" onclick="pickTeam('MI London')">MI London</div>
-            <div class="team-pill" style="background:#c5a059; color:black" onclick="pickTeam('Manchester SG')">Man. SG</div>
-            <div class="team-pill" style="background:#ff822a" onclick="pickTeam('Sunrisers Leeds')">Sunrisers</div>
-            <div class="team-pill" style="background:#ef4123" onclick="pickTeam('Southern Brave')">S. Brave</div>
-            <div class="team-pill" style="background:#edac15; color:black" onclick="pickTeam('Birm. Phoenix')">Phoenix</div>
-            <div class="team-pill" style="background:#fde100; color:black" onclick="pickTeam('Trent Rockets')">T. Rockets</div>
+    <div id="squadSetup" class="card animate-in">
+        <h3>MATCH DAY XI</h3>
+        <div id="squadScroll" style="max-height:300px; overflow-y:auto; margin-bottom:10px;"></div>
+        <button class="btn" onclick="startMatch()">CONFIRM SQUAD</button>
+    </div>
+
+    <div id="matchScreen" class="card">
+        <div id="score" style="font-size:75px; font-weight:900; line-height:1;">0/0</div>
+        <div id="balls" style="color:var(--primary); font-size:13px; margin: 10px 0;">BALLS: 0 | LEFT: 100</div>
+        <div id="comm" style="color:var(--accent); font-size:14px; min-height:22px;">READY</div>
+        
+        <div class="numpad">
+            <button class="num-btn" onclick="play(1)">1</button>
+            <button class="num-btn" onclick="play(2)">2</button>
+            <button class="num-btn" onclick="play(3)">3</button>
+            <button class="num-btn" onclick="play(4)">4</button>
+            <button class="num-btn" onclick="play(5)">5</button>
+            <button class="num-btn" onclick="play(6)">6</button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-top:25px; border-top:1px solid #444; padding-top:15px; font-size:13px;">
+            <div style="text-align:left;"><small style="color:#777">BAT</small><br><b id="uBat">-</b><br><span id="uBatS">0(0)</span></div>
+            <div style="text-align:right;"><small style="color:#777">BOWL</small><br><b id="uBowl">-</b><br><span id="uBowlS">W: 0 | R: 0</span></div>
         </div>
     </div>
 
-    <div id="selectorView" class="glass-card">
-        <h3 id="selectorTitle">Strategy Room</h3>
-        <div class="player-list" id="selectorList"></div>
-    </div>
-
-    <div id="gameArea" style="width:100%">
-        <div class="glass-card" style="margin: 0 auto;">
-            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--primary); font-weight:bold;">
-                <span>SET: <span id="oversLeft">0.0</span></span>
-                <span style="color:var(--accent)">TARGET: <span id="targetDisplay">-</span></span>
-                <span>BALLS: <span id="ballsLeft">100</span></span>
-            </div>
-            <div class="score-big" id="liveScore">0/0</div>
-            <div id="turnInfo" style="color:var(--accent); font-size:14px; margin-bottom:5px;"></div>
-            <div style="display:flex; justify-content:space-around; background:rgba(255,255,255,0.03); padding:15px; border-radius:15px;">
-                <div style="text-align:left"><small>BAT</small><br><b id="curBatName">-</b><br><small id="batStats" style="color:var(--primary)">0(0)</small></div>
-                <div style="text-align:right"><small>BOWL</small><br><b id="curBowlName">-</b><br><small id="bowlStats" style="color:var(--danger)">Wkts: 0</small></div>
-            </div>
-            <div id="commBox" style="font-weight:bold; color:var(--accent); margin:10px 0;">Play ball!</div>
-            <div class="num-pad" id="numButtons"></div>
-        </div>
-    </div>
-
-    <div id="tossArea" class="glass-card">
-        <h2 id="matchHeader"></h2>
-        <button class="btn-main" onclick="startMatch('bat')">Bat First</button>
-        <button class="btn-main" style="background:#444" onclick="startMatch('bowl')">Bowl First</button>
+    <div id="playerPicker" class="card animate-in" style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10000; border:2px solid var(--primary); display:none;">
+        <h3 id="pickTitle" style="color:var(--primary)">PICK PLAYER</h3>
+        <div id="pickList"></div>
     </div>
 </div>
 
 <script>
-    const squads = {
-        "MI London": [{n:"R. Sharma", r:"BAT"}, {n:"I. Kishan", r:"BAT"}, {n:"S. Yadav", r:"BAT"}, {n:"H. Pandya", r:"AR"}, {n:"J. Bumrah", r:"BOWL"}, {n:"G. Coetzee", r:"BOWL"}],
-        "Manchester SG": [{n:"KL Rahul", r:"BAT"}, {n:"N. Pooran", r:"BAT"}, {n:"M. Stoinis", r:"AR"}, {n:"R. Bishnoi", r:"BOWL"}, {n:"M. Yadav", r:"BOWL"}, {n:"Y. Thakur", r:"BOWL"}],
-        "Sunrisers Leeds": [{n:"T. Head", r:"BAT"}, {n:"A. Sharma", r:"BAT"}, {n:"H. Klaasen", r:"BAT"}, {n:"P. Cummins", r:"BOWL"}, {n:"B. Kumar", r:"BOWL"}, {n:"T. Natarajan", r:"BOWL"}],
-        "Southern Brave": [{n:"D. Warner", r:"BAT"}, {n:"R. Pant", r:"BAT"}, {n:"M. Marsh", r:"AR"}, {n:"K. Yadav", r:"BOWL"}, {n:"A. Nortje", r:"BOWL"}, {n:"M. Kumar", r:"BOWL"}],
-        "Birm. Phoenix": [{n:"L. Livingstone", r:"AR"}, {n:"B. Duckett", r:"BAT"}, {n:"M. Ali", r:"AR"}, {n:"C. Woakes", r:"BOWL"}, {n:"A. Milne", r:"BOWL"}, {n:"T. Helm", r:"BOWL"}],
-        "Trent Rockets": [{n:"A. Hales", r:"BAT"}, {n:"J. Root", r:"BAT"}, {n:"R. Powell", r:"BAT"}, {n:"L. Gregory", r:"AR"}, {n:"R. Khan", r:"BOWL"}, {n:"L. Wood", r:"BOWL"}]
-    };
+    const data = {
+    "MI London": [
+        "R. Sharma", "I. Kishan", "S. Yadav", "T. Varma", "H. Pandya", 
+        "T. David", "R. Shepherd", "G. Coetzee", "J. Bumrah", "P. Chawla", 
+        "A. Madhwal", "N. Thushara", "D. Brevis", "M. Nabi", "N. Dhir"
+    ],
+    "Manchester SG": [
+        "KL Rahul", "Q. de Kock", "N. Pooran", "M. Stoinis", "A. Badoni", 
+        "K. Pandya", "R. Bishnoi", "M. Yadav", "D. Padikkal", "Y. Thakur", 
+        "A. Khan", "S. Joseph", "K. Mayers", "P. Mankad", "M. Siddharth"
+    ],
+    "Sunrisers Leeds": [
+        "T. Head", "A. Sharma", "A. Markram", "H. Klaasen", "N. Reddy", 
+        "A. Samad", "P. Cummins", "B. Kumar", "T. Natarajan", "M. Markande", 
+        "U. Malik", "W. Hasaranga", "J. Subramanyan", "G. Phillips", "F. Farooqi"
+    ],
+    "Southern Brave": [
+        "D. Warner", "P. Shaw", "M. Marsh", "R. Pant", "T. Stubbs", 
+        "A. Patel", "K. Yadav", "A. Nortje", "I. Sharma", "K. Ahmed", 
+        "M. Kumar", "S. Hope", "J. Richardson", "L. Williams", "Y. Dhull"
+    ],
+    "Birmingham Phoenix": [
+        "L. Livingstone", "B. Duckett", "M. Ali", "D. Mousley", "B. Howell", 
+        "C. Woakes", "A. Milne", "T. Helm", "J. Bethell", "S. Abbott", 
+        "K. Richardson", "C. Wood", "P. Stirling", "G. Scrimshaw", "H. Brookes"
+    ],
+    "Trent Rockets": [
+        "A. Hales", "J. Root", "T. Kohler-Cadmore", "S. Hain", "R. Powell", 
+        "L. Gregory", "I. Sodhi", "R. Khan", "L. Wood", "S. Cook", 
+        "A. Rashid", "D. Sams", "M. Carter", "J. Thompson", "T. Rogers"
+    ]
+};
+    let league = {}; Object.keys(data).forEach(t => league[t] = {pts:0, p:0});
+    let career = {}; Object.values(data).flat().forEach(p => career[p] = {r:0, w:0});
+    let myT = "", oppT = "", playing = [], out = [], isFinal = false;
+    let score = 0, wkts = 0, balls = 0, target = 999, inn = 1, bat = "", bowl = "", br=0, bb=0, bowlStat = {};
 
-    let gameMode = "CPU", myTeam = "", oppTeam = "", score = 0, wickets = 0, balls = 0, target = Infinity, innings = 1;
-    let curBatObj = null, curBowlObj = null, p1Choice = null;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    function handleLogin() {
-        if(!document.getElementById('mgrName').value) return alert("Enter Name!");
-        document.getElementById('loginArea').style.display = 'none';
-        document.getElementById('modeSelect').style.display = 'block';
+    function checkLogin() { if(localStorage.getItem("log")) unlock(); }
+    function handleAuth(type) {
+        let u = document.getElementById('uIn').value, p = document.getElementById('pIn').value;
+        if(type==='reg') { localStorage.setItem("m_u", u); localStorage.setItem("m_p", p); alert("Registered!"); }
+        else if(u === localStorage.getItem("m_u") && p === localStorage.getItem("m_p")) unlock();
+        else alert("Invalid Credentials");
     }
-
-    function setMode(m) {
-        gameMode = m;
-        document.getElementById('modeSelect').style.display = 'none';
-        document.getElementById('teamSelect').style.display = 'block';
-    }
-
-    function pickTeam(t) {
-        myTeam = t;
-        let ts = Object.keys(squads);
-        oppTeam = ts.filter(x => x !== t)[Math.floor(Math.random()*(ts.length-1))];
-        for(let team in squads) squads[team].forEach(p => { p.runs=0; p.bF=0; p.wkts=0; p.out=false; });
-        document.getElementById('teamSelect').style.display = 'none';
-        document.getElementById('tossArea').style.display = 'block';
-        document.getElementById('matchHeader').innerText = `${myTeam} vs ${oppTeam}`;
-    }
-
-    function startMatch(c) {
-        document.getElementById('tossArea').style.display = 'none';
-        document.getElementById('gameArea').style.display = 'block';
-        initInnings(1);
-    }
-
-    function initInnings(n) {
-        innings = n; score = 0; wickets = 0; balls = 0;
-        choosePlayer('BAT'); setOpponent('BOWL');
-        setupButtons(); updateDisplay();
-    }
-
-    function choosePlayer(role) {
-        let t = (role === 'BAT') ? (innings === 1 ? myTeam : oppTeam) : (innings === 1 ? oppTeam : myTeam);
-        if (t === myTeam) {
-            document.getElementById('selectorView').style.display = 'block';
-            document.getElementById('gameArea').style.opacity = '0.1';
-            let avail = squads[myTeam].filter(p => role === 'BAT' ? !p.out : (p.r !== 'BAT'));
-            let h = ""; avail.forEach(p => h += `<div class="player-item" onclick="confirmSelect('${p.n}','${role}')">${p.n} <span style="font-size:10px">${p.r}</span></div>`);
-            document.getElementById('selectorList').innerHTML = h;
-        } else setOpponent(role);
-    }
-
-    function confirmSelect(n, r) {
-        let p = squads[myTeam].find(x => x.n === n);
-        if(r === 'BAT') curBatObj = p; else curBowlObj = p;
-        document.getElementById('selectorView').style.display = 'none';
-        document.getElementById('gameArea').style.opacity = '1';
-        updateDisplay();
-    }
-
-    function setOpponent(role) {
-        let t = (role === 'BAT') ? (innings === 1 ? myTeam : oppTeam) : (innings === 1 ? oppTeam : myTeam);
-        if(t !== oppTeam) return;
-        let avail = squads[oppTeam].filter(p => role === 'BAT' ? !p.out : (p.r !== 'BAT'));
-        let p = avail[Math.floor(Math.random()*avail.length)];
-        if(role === 'BAT') curBatObj = p; else curBowlObj = p;
-    }
-
-    function handleTurn(val) {
-        if(gameMode === "PVP" && p1Choice === null) {
-            p1Choice = val; document.getElementById('turnInfo').innerText = "PLAYER 2 TURN";
-            return;
+    function unlock() {
+        localStorage.setItem("log", "true");
+        document.getElementById('authGate').style.display='none';
+        document.getElementById('mainApp').style.display='flex';
+        if(!myT) {
+            document.getElementById('teamSelection').style.display='block';
+            let h = ""; Object.keys(data).forEach(t => h += `<button class="btn" style="background:#fff; color:#000; margin-bottom:12px;" onclick="setTeam('${t}')">${t}</button>`);
+            document.getElementById('teamGrid').innerHTML = h;
         }
-        let p1 = (gameMode === "CPU") ? val : p1Choice;
-        let p2 = (gameMode === "CPU") ? Math.floor(Math.random()*6)+1 : val;
-        p1Choice = null; document.getElementById('turnInfo').innerText = (gameMode==="PVP") ? "PLAYER 1 TURN" : "";
+    }
+    function logout() { localStorage.removeItem("log"); location.reload(); }
 
-        if(p1 === p2) {
-            wickets++; curBatObj.out = true; curBowlObj.wkts++;
-            document.getElementById('commBox').innerText = "WICKET! OUT!";
-            if(wickets < 6) choosePlayer('BAT');
+    function setTeam(t) { myT = t; document.getElementById('dashTeam').innerText = t; document.getElementById('teamSelection').style.display='none'; showTab('table'); }
+
+    function showTab(t) {
+        document.getElementById('dashboard').style.display='block';
+        ['view-table', 'view-stats', 'view-market'].forEach(v => document.getElementById(v).style.display='none');
+        document.getElementById('view-'+t).style.display='block';
+        document.querySelectorAll('.nav span').forEach(s => s.classList.remove('active'));
+        document.getElementById('tab-'+t.charAt(0)).classList.add('active');
+        if(t==='table') renderTable();
+        if(t==='stats') renderCaps();
+        if(t==='market') renderMarket();
+    }
+
+    function renderTable() {
+        let sorted = Object.keys(league).sort((a,b) => league[b].pts - league[a].pts);
+        let h = ""; sorted.forEach((t,i) => h += `<tr style="border-bottom:1px solid #333"><td style="padding:8px">${i+1}</td><td>${t}</td><td style="text-align:right"><b>${league[t].pts}</b></td></tr>`);
+        document.getElementById('tableBody').innerHTML = h;
+        document.getElementById('matchLog').innerText = isFinal ? "🏆 GRAND FINAL 🏆" : `SEASON MATCH: ${league[myT].p + 1} / 5`;
+    }
+
+    function renderCaps() {
+        let o = Object.keys(career).sort((a,b) => career[b].r - career[a].r)[0];
+        let p = Object.keys(career).sort((a,b) => career[b].w - career[a].w)[0];
+        document.getElementById('orangeCap').innerText = `${o} (${career[o].r}r)`;
+        document.getElementById('purpleCap').innerText = `${p} (${career[p].w}w)`;
+    }
+
+    function renderMarket() {
+        let s = document.getElementById('sellP'), b = document.getElementById('buyP');
+        s.innerHTML = data[myT].map(p => `<option value="${p}">${p}</option>`).join('');
+        let buyH = ""; Object.keys(data).forEach(t => { if(t!==myT) data[t].forEach(p => buyH += `<option value="${p}">${p} (${t})</option>`); });
+        b.innerHTML = buyH;
+    }
+
+    function executeTrade() {
+        let sell = document.getElementById('sellP').value, buy = document.getElementById('buyP').value;
+        let tT = ""; Object.keys(data).forEach(t => { if(data[t].includes(buy)) tT = t; });
+        data[myT] = data[myT].filter(x => x!==sell); data[myT].push(buy);
+        data[tT] = data[tT].filter(x => x!==buy); data[tT].push(sell);
+        alert("TRADE SUCCESSFUL!"); renderMarket();
+    }
+
+    function openSquad() {
+        document.getElementById('dashboard').style.display='none'; document.getElementById('squadSetup').style.display='block';
+        playing = []; let h = ""; data[myT].forEach(p => h += `<div id="sq-${p.replace(/\s/g,'')}" class="list-item" onclick="toggle('${p}')">${p}</div>`);
+        document.getElementById('squadScroll').innerHTML = h;
+    }
+
+    function toggle(p) {
+        let i = playing.indexOf(p); if(i>-1) playing.splice(i,1); else if(playing.length<11) playing.push(p);
+        document.querySelectorAll('.list-item').forEach(l => l.classList.remove('selected'));
+        playing.forEach(n => document.getElementById(`sq-${n.replace(/\s/g,'')}`).classList.add('selected'));
+    }
+
+    function startMatch() {
+        if(playing.length<11) return alert("Select 11 Players");
+        document.getElementById('squadSetup').style.display='none';
+        if(!isFinal) { let o = Object.keys(data).filter(x => x!==myT); oppT = o[Math.floor(Math.random()*o.length)]; }
+        document.getElementById('matchScreen').style.display='block';
+        if(isFinal) document.getElementById('matchScreen').style.border = "3px solid var(--accent)";
+        initInn(1);
+    }
+
+    function initInn(n) {
+        inn = n; score = 0; wkts = 0; balls = 0; out = []; bowlStat = {};
+        if(inn===1) { pickB(); aiBowl(); } else { aiBat(); pickBowl(); }
+    }
+
+    function pickB() {
+        document.getElementById('playerPicker').style.display='block'; document.getElementById('pickTitle').innerText="NEXT BATTER";
+        let h = ""; playing.filter(p => !out.includes(p) && p!==bat).forEach(p => h += `<div class="list-item" onclick="setB('${p}')">${p}</div>`);
+        document.getElementById('pickList').innerHTML = h;
+    }
+    function setB(p) { bat = p; br=0; bb=0; document.getElementById('playerPicker').style.display='none'; update(); }
+    function aiBat() { bat = data[oppT][wkts]; br=0; bb=0; update(); }
+
+    function pickBowl() {
+        document.getElementById('playerPicker').style.display='block'; document.getElementById('pickTitle').innerText="PICK BOWLER";
+        let h = ""; playing.slice(6).forEach(p => h += `<div class="list-item" onclick="setBowl('${p}')">${p}</div>`);
+        document.getElementById('pickList').innerHTML = h;
+    }
+    function setBowl(p) { bowl = p; if(!bowlStat[p]) bowlStat[p]={w:0, r:0}; document.getElementById('playerPicker').style.display='none'; update(); }
+    function aiBowl() { bowl = data[oppT][Math.floor(Math.random()*5)+6]; if(!bowlStat[bowl]) bowlStat[bowl]={w:0, r:0}; update(); }
+
+    function playEffect(type) {
+        const flash = document.getElementById('flashLayer'); const card = document.getElementById('matchScreen');
+        card.classList.add('hit-shake'); flash.style.background = type === 'six' ? "rgba(0, 242, 254, 0.4)" : "rgba(255, 0, 0, 0.5)";
+        setTimeout(() => { card.classList.remove('hit-shake'); flash.style.background = "transparent"; }, 400);
+        const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(type === 'six' ? 880 : 150, audioCtx.currentTime); gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+    }
+
+    function play(v) {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        let ai = Math.floor(Math.random()*6)+1;
+        let btMove = (inn===1)?v:ai, blMove = (inn===1)?ai:v;
+        balls++; bb++;
+        if(btMove === blMove) {
+            wkts++; out.push(bat); career[bowl].w++; bowlStat[bowl].w++;
+            document.getElementById('comm').innerText = "☝️ OUT!"; playEffect('wicket');
+            if(wkts<10) setTimeout(() => { (inn===1)?pickB():aiBat(); }, 600);
         } else {
-            score += p1; curBatObj.runs += p1; curBatObj.bF++;
-            document.getElementById('commBox').innerText = `Scored ${p1} runs!`;
+            score+=btMove; br+=btMove; career[bat].r+=btMove; bowlStat[bowl].r+=btMove;
+            document.getElementById('comm').innerText = btMove + " Runs"; if(btMove >= 4) playEffect('six');
         }
-        balls++;
-        if(balls % 5 === 0 && balls < 100) choosePlayer('BOWL');
-        if(innings === 2 && score >= target) finish("BATTERS WIN!");
-        else if(balls >= 100 || wickets >= 6) {
-            if(innings === 1) { target = score + 1; alert("TARGET: " + target); initInnings(2); }
-            else finish(score >= target ? "BATTERS WIN!" : "BOWLERS WIN!");
+        if(balls%5===0 && balls<100 && wkts<10) setTimeout(() => { (inn===1)?aiBowl():pickBowl(); }, 800);
+        if(inn===2 && score>=target) return end(myT + " WON!");
+        if(balls>=100 || wkts>=10) {
+            if(inn===1) { target=score+1; alert("Target: "+target); initInn(2); }
+            else end(score>=target ? myT+" WON!" : oppT+" WON!");
         }
-        updateDisplay();
+        update();
     }
 
-    function setupButtons() {
-        let h = ""; for(let i=1; i<=6; i++) h += `<button class="num-btn" onclick="handleTurn(${i})">${i}</button>`;
-        document.getElementById('numButtons').innerHTML = h;
+    function update() {
+        document.getElementById('score').innerText = score+"/"+wkts;
+        document.getElementById('balls').innerText = `BALLS: ${balls} | LEFT: ${100-balls}`;
+        document.getElementById('uBat').innerText = bat; document.getElementById('uBatS').innerText = `${br}(${bb})`;
+        document.getElementById('uBowl').innerText = bowl; let s = bowlStat[bowl]||{w:0,r:0};
+        document.getElementById('uBowlS').innerText = `W: ${s.w} | R: ${s.r}`;
     }
 
-    function updateDisplay() {
-        document.getElementById('liveScore').innerText = `${score}/${wickets}`;
-        document.getElementById('ballsLeft').innerText = 100 - balls;
-        document.getElementById('oversLeft').innerText = `${Math.floor(balls/5)}.${balls%5}`;
-        document.getElementById('targetDisplay').innerText = target === Infinity ? "-" : target;
-        if(curBatObj) { document.getElementById('curBatName').innerText = curBatObj.n; document.getElementById('batStats').innerText = `${curBatObj.runs}(${curBatObj.bF})`; }
-        if(curBowlObj) { document.getElementById('curBowlName').innerText = curBowlObj.n; document.getElementById('bowlStats').innerText = `Wkts: ${curBowlObj.wkts}`; }
+    function end(res) {
+        alert(res);
+        if(isFinal) { alert(res.includes(myT) ? "🏆 CHAMPIONS! 🏆" : "🥈 RUNNERS UP"); location.reload(); return; }
+        if(res.includes(myT)) league[myT].pts += 2; league[myT].p++;
+        let sorted = Object.keys(league).sort((a,b) => league[b].pts - league[a].pts);
+        if(league[myT].p >= 5) {
+            if(sorted.slice(0,2).includes(myT)) {
+                isFinal = true; oppT = (sorted[0] === myT) ? sorted[1] : sorted[0];
+                let btn = document.getElementById('playBtn'); btn.innerHTML = "🏆 PLAY GRAND FINAL 🏆"; btn.style.background = "var(--gold)";
+            } else { alert("Season Over! Rank: " + (sorted.indexOf(myT)+1)); location.reload(); }
+        }
+        document.getElementById('matchScreen').style.display='none'; showTab('table');
     }
-
-    function finish(m) { alert(m); location.reload(); }
 </script>
 </body>
 </html>
