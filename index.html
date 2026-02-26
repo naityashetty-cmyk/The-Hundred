@@ -310,11 +310,36 @@
         document.getElementById('uBowl').innerText = bowl; let s = bowlStat[bowl]||{w:0,r:0};
         document.getElementById('uBowlS').innerText = `W: ${s.w} | R: ${s.r}`;
     }
+function simulateOtherMatches() {
+    let teams = Object.keys(data).filter(t => t !== myT);
 
+    for (let i = 0; i < teams.length; i += 2) {
+        if (teams[i+1]) {
+
+            let t1 = teams[i];
+            let t2 = teams[i+1];
+
+            // Random realistic scores
+            let score1 = Math.floor(Math.random() * 151) + 50;
+            let score2 = Math.floor(Math.random() * 151) + 50;
+
+            league[t1].p++;
+            league[t2].p++;
+
+            if (score1 > score2) {
+                league[t1].pts += 2;
+            } else {
+                league[t2].pts += 2;
+            }
+        }
+    }
+}
     function end(res) {
         alert(res);
         if(isFinal) { alert(res.includes(myT) ? "🏆 CHAMPIONS! 🏆" : "🥈 RUNNERS UP"); location.reload(); return; }
-        if(res.includes(myT)) league[myT].pts += 2; league[myT].p++;
+        if(res.includes(myT)) league[myT].pts += 2;
+league[myT].p++;
+simulateOtherMatches();
         let sorted = Object.keys(league).sort((a,b) => league[b].pts - league[a].pts);
         if(league[myT].p >= 5) {
             if(sorted.slice(0,2).includes(myT)) {
@@ -327,3 +352,4 @@
 </script>
 </body>
 </html>
+
