@@ -4,50 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Hundred Pro | Ultimate Manager</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏏</text></svg>">
     <style>
-        :root { --primary: #00f2fe; --accent: #f1c40f; --danger: #ff4b2b; --glass: rgba(255, 255, 255, 0.1); }
+        :root { --primary: #00f2fe; --accent: #f1c40f; --danger: #ff4b2b; --glass: rgba(15, 20, 30, 0.95); }
         body { margin:0; font-family: 'Inter', sans-serif; color:white; text-align:center; background: #05070a; overflow-x:hidden; }
         .overlay { 
             min-height:100vh; padding:20px; 
-            background: radial-gradient(circle at center, rgba(0,0,0,0.5), rgba(0,0,0,0.9)), 
+            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), 
                         url('https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=2000');
             background-size: cover; background-position: center; background-attachment: fixed;
             display: flex; flex-direction: column; align-items: center;
         }
-        .glass-card { background: rgba(15, 20, 30, 0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; padding: 25px; width: 90%; max-width: 500px; margin-top: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
-        .score-big { font-size: 60px; font-weight: 900; margin: 5px 0; color: #fff; text-shadow: 0 0 15px var(--primary); }
-        .hud-container { background: rgba(255,255,255,0.03); padding:12px; border-radius:15px; margin:10px 0; border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; align-items: center; }
-        .btn-main { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; border: none; padding: 12px 30px; border-radius: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
-        .num-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-        .num-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px; border-radius: 12px; font-size: 20px; cursor: pointer; }
+        .glass-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 30px; width: 90%; max-width: 500px; margin-top: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .score-big { font-size: 64px; font-weight: 900; margin: 5px 0; color: #fff; text-shadow: 0 0 20px var(--primary); }
+        .btn-main { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; border: none; padding: 14px 35px; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 15px; width: 100%; transition: 0.3s; }
+        .btn-main:hover { transform: scale(1.02); box-shadow: 0 0 15px var(--primary); }
+        .num-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+        .num-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 18px; border-radius: 16px; font-size: 22px; cursor: pointer; transition: 0.2s; }
         .num-btn:hover { background: var(--primary); color: #000; }
         .player-list { text-align: left; max-height: 250px; overflow-y: auto; margin: 15px 0; border: 1px solid #333; border-radius: 10px; }
         .player-item { padding: 12px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; cursor: pointer; }
         .player-item:hover { background: var(--primary); color: black; }
-        #gameArea, #tossArea, #teamSelect, #squadView, #selectorView { display:none; }
-        .tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; background: #444; }
+        .team-pill { padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; }
+        #gameArea, #tossArea, #teamSelect, #selectorView, #modeSelect { display:none; }
     </style>
 </head>
 <body>
 
-<div class="overlay" id="mainBg">
-    <h2 style="letter-spacing: 4px;">THE HUNDRED <span style="color: var(--primary);">ULTIMATE</span></h2>
+<div class="overlay">
+    <h2 style="letter-spacing: 5px; font-weight: 900; margin-top: 20px; color:var(--primary)">THE HUNDRED PRO</h2>
 
-    <div id="loginArea" class="glass-card" style="display:block;">
+    <div id="loginArea" class="glass-card">
         <h3>MANAGER LOGIN</h3>
-        <input type="text" id="mgrName" placeholder="Enter Name" style="padding:12px; width:80%; border-radius:10px; border:none; margin-bottom:15px; background:var(--glass); color:white;">
-        <br><button class="btn-main" onclick="handleLogin()">Login</button>
+        <input type="text" id="mgrName" placeholder="Manager Name" style="padding:15px; width:85%; border-radius:12px; border:none; background:rgba(255,255,255,0.05); color:white; outline:none; margin-bottom:10px;">
+        <button class="btn-main" onclick="handleLogin()">Join Stadium</button>
+    </div>
+
+    <div id="modeSelect" class="glass-card">
+        <h3>SELECT MODE</h3>
+        <button class="btn-main" onclick="setMode('CPU')">Player vs Computer</button>
+        <button class="btn-main" style="background: #6c5ce7" onclick="setMode('PVP')">Local Multiplayer (P2P)</button>
     </div>
 
     <div id="teamSelect" class="glass-card">
-        <h3>CHOOSE YOUR TEAM</h3>
-        <div id="teamGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
+        <h3>CHOOSE FRANCHISE</h3>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="team-pill" style="background:#004ba0" onclick="pickTeam('MI London')">MI London</div>
+            <div class="team-pill" style="background:#c5a059; color:black" onclick="pickTeam('Manchester SG')">Man. SG</div>
+            <div class="team-pill" style="background:#ff822a" onclick="pickTeam('Sunrisers Leeds')">Sunrisers</div>
+            <div class="team-pill" style="background:#ef4123" onclick="pickTeam('Southern Brave')">S. Brave</div>
+            <div class="team-pill" style="background:#edac15; color:black" onclick="pickTeam('Birm. Phoenix')">Phoenix</div>
+            <div class="team-pill" style="background:#fde100; color:black" onclick="pickTeam('Trent Rockets')">T. Rockets</div>
+        </div>
     </div>
 
     <div id="selectorView" class="glass-card">
         <h3 id="selectorTitle">Strategy Room</h3>
-        <p id="selectorDesc">Select your next player</p>
         <div class="player-list" id="selectorList"></div>
     </div>
 
@@ -59,12 +70,12 @@
                 <span>BALLS: <span id="ballsLeft">100</span></span>
             </div>
             <div class="score-big" id="liveScore">0/0</div>
-            <div class="hud-container">
-                <div style="text-align:left"><small>BATSMAN</small><br><b id="curBatName">-</b><br><small id="batStats" style="color:var(--primary)">0(0)</small></div>
-                <div style="font-weight:900; opacity:0.2;">VS</div>
-                <div style="text-align:right"><small>BOWLING</small><br><b id="curBowlName">-</b><br><small id="bowlStats" style="color:var(--danger)">Wkts: 0</small></div>
+            <div id="turnInfo" style="color:var(--accent); font-size:14px; margin-bottom:5px;"></div>
+            <div style="display:flex; justify-content:space-around; background:rgba(255,255,255,0.03); padding:15px; border-radius:15px;">
+                <div style="text-align:left"><small>BAT</small><br><b id="curBatName">-</b><br><small id="batStats" style="color:var(--primary)">0(0)</small></div>
+                <div style="text-align:right"><small>BOWL</small><br><b id="curBowlName">-</b><br><small id="bowlStats" style="color:var(--danger)">Wkts: 0</small></div>
             </div>
-            <div id="commBox" style="font-weight:bold; color:var(--accent); min-height:20px;">Match starting...</div>
+            <div id="commBox" style="font-weight:bold; color:var(--accent); margin:10px 0;">Play ball!</div>
             <div class="num-pad" id="numButtons"></div>
         </div>
     </div>
@@ -78,32 +89,34 @@
 
 <script>
     const squads = {
-        "MI London": [
-            {n:"R. Sharma", r:"BAT", runs:0, balls:0, wkts:0, out:false}, {n:"I. Kishan", r:"BAT", runs:0, balls:0, wkts:0, out:false}, 
-            {n:"S. Yadav", r:"BAT", runs:0, balls:0, wkts:0, out:false}, {n:"H. Pandya", r:"AR", runs:0, balls:0, wkts:0, out:false},
-            {n:"T. David", r:"BAT", runs:0, balls:0, wkts:0, out:false}, {n:"J. Bumrah", r:"BOWL", runs:0, balls:0, wkts:0, out:false}, 
-            {n:"G. Coetzee", r:"BOWL", runs:0, balls:0, wkts:0, out:false}, {n:"P. Chawla", r:"BOWL", runs:0, balls:0, wkts:0, out:false}
-        ],
-        "Trent Rockets": [
-            {n:"A. Hales", r:"BAT", runs:0, balls:0, wkts:0, out:false}, {n:"J. Root", r:"BAT", runs:0, balls:0, wkts:0, out:false}, 
-            {n:"R. Powell", r:"BAT", runs:0, balls:0, wkts:0, out:false}, {n:"L. Gregory", r:"AR", runs:0, balls:0, wkts:0, out:false},
-            {n:"R. Khan", r:"BOWL", runs:0, balls:0, wkts:0, out:false}, {n:"L. Wood", r:"BOWL", runs:0, balls:0, wkts:0, out:false}, 
-            {n:"I. Sodhi", r:"BOWL", runs:0, balls:0, wkts:0, out:false}, {n:"S. Cook", r:"BOWL", runs:0, balls:0, wkts:0, out:false}
-        ]
+        "MI London": [{n:"R. Sharma", r:"BAT"}, {n:"I. Kishan", r:"BAT"}, {n:"S. Yadav", r:"BAT"}, {n:"H. Pandya", r:"AR"}, {n:"J. Bumrah", r:"BOWL"}, {n:"G. Coetzee", r:"BOWL"}],
+        "Manchester SG": [{n:"KL Rahul", r:"BAT"}, {n:"N. Pooran", r:"BAT"}, {n:"M. Stoinis", r:"AR"}, {n:"R. Bishnoi", r:"BOWL"}, {n:"M. Yadav", r:"BOWL"}, {n:"Y. Thakur", r:"BOWL"}],
+        "Sunrisers Leeds": [{n:"T. Head", r:"BAT"}, {n:"A. Sharma", r:"BAT"}, {n:"H. Klaasen", r:"BAT"}, {n:"P. Cummins", r:"BOWL"}, {n:"B. Kumar", r:"BOWL"}, {n:"T. Natarajan", r:"BOWL"}],
+        "Southern Brave": [{n:"D. Warner", r:"BAT"}, {n:"R. Pant", r:"BAT"}, {n:"M. Marsh", r:"AR"}, {n:"K. Yadav", r:"BOWL"}, {n:"A. Nortje", r:"BOWL"}, {n:"M. Kumar", r:"BOWL"}],
+        "Birm. Phoenix": [{n:"L. Livingstone", r:"AR"}, {n:"B. Duckett", r:"BAT"}, {n:"M. Ali", r:"AR"}, {n:"C. Woakes", r:"BOWL"}, {n:"A. Milne", r:"BOWL"}, {n:"T. Helm", r:"BOWL"}],
+        "Trent Rockets": [{n:"A. Hales", r:"BAT"}, {n:"J. Root", r:"BAT"}, {n:"R. Powell", r:"BAT"}, {n:"L. Gregory", r:"AR"}, {n:"R. Khan", r:"BOWL"}, {n:"L. Wood", r:"BOWL"}]
     };
 
-    let myTeam = "", oppTeam = "Trent Rockets", score = 0, wickets = 0, balls = 0, target = Infinity, innings = 1;
-    let curBatObj = null, curBowlObj = null, isSuperOver = false, maxBalls = 100, maxWkts = 8;
+    let gameMode = "CPU", myTeam = "", oppTeam = "", score = 0, wickets = 0, balls = 0, target = Infinity, innings = 1;
+    let curBatObj = null, curBowlObj = null, p1Choice = null;
 
     function handleLogin() {
+        if(!document.getElementById('mgrName').value) return alert("Enter Name!");
         document.getElementById('loginArea').style.display = 'none';
+        document.getElementById('modeSelect').style.display = 'block';
+    }
+
+    function setMode(m) {
+        gameMode = m;
+        document.getElementById('modeSelect').style.display = 'none';
         document.getElementById('teamSelect').style.display = 'block';
-        let h = ""; for(let t in squads) h += `<div class="player-item" onclick="pickTeam('${t}')">${t}</div>`;
-        document.getElementById('teamGrid').innerHTML = h;
     }
 
     function pickTeam(t) {
-        myTeam = t; oppTeam = (t === "MI London") ? "Trent Rockets" : "MI London";
+        myTeam = t;
+        let ts = Object.keys(squads);
+        oppTeam = ts.filter(x => x !== t)[Math.floor(Math.random()*(ts.length-1))];
+        for(let team in squads) squads[team].forEach(p => { p.runs=0; p.bF=0; p.wkts=0; p.out=false; });
         document.getElementById('teamSelect').style.display = 'none';
         document.getElementById('tossArea').style.display = 'block';
         document.getElementById('matchHeader').innerText = `${myTeam} vs ${oppTeam}`;
@@ -111,78 +124,66 @@
 
     function startMatch(c) {
         document.getElementById('tossArea').style.display = 'none';
-        document.getElementById('gameArea').style.display = 'flex';
+        document.getElementById('gameArea').style.display = 'block';
         initInnings(1);
     }
 
     function initInnings(n) {
         innings = n; score = 0; wickets = 0; balls = 0;
-        if(isSuperOver) { maxBalls = 6; maxWkts = 2; }
-        // Reset player status
-        for(let t in squads) squads[t].forEach(p => { p.runs=0; p.balls=0; p.wkts=0; p.out=false; });
-        
-        choosePlayer('BAT');
-        setOpponentPlayer('BOWL');
-        setupButtons();
-        updateDisplay();
+        choosePlayer('BAT'); setOpponent('BOWL');
+        setupButtons(); updateDisplay();
     }
 
     function choosePlayer(role) {
-        let team = (role === 'BAT') ? ((innings === 1) ? myTeam : oppTeam) : ((innings === 1) ? oppTeam : myTeam);
-        
-        if (team === myTeam) {
+        let t = (role === 'BAT') ? (innings === 1 ? myTeam : oppTeam) : (innings === 1 ? oppTeam : myTeam);
+        if (t === myTeam) {
             document.getElementById('selectorView').style.display = 'block';
             document.getElementById('gameArea').style.opacity = '0.1';
-            document.getElementById('selectorTitle').innerText = (role === 'BAT') ? "SELECT NEXT BATSMAN" : "SELECT NEXT BOWLER";
-            
-            let avail = squads[myTeam].filter(p => role === 'BAT' ? !p.out : (p.r === 'BOWL' || p.r === 'AR'));
-            let h = ""; avail.forEach(p => h += `<div class="player-item" onclick="confirmSelection('${p.n}', '${role}')">${p.n} <span class="tag">${p.r}</span></div>`);
+            let avail = squads[myTeam].filter(p => role === 'BAT' ? !p.out : (p.r !== 'BAT'));
+            let h = ""; avail.forEach(p => h += `<div class="player-item" onclick="confirmSelect('${p.n}','${role}')">${p.n} <span style="font-size:10px">${p.r}</span></div>`);
             document.getElementById('selectorList').innerHTML = h;
-        } else {
-            setOpponentPlayer(role);
-        }
+        } else setOpponent(role);
     }
 
-    function confirmSelection(name, role) {
-        if(role === 'BAT') curBatObj = squads[myTeam].find(p => p.n === name);
-        else curBowlObj = squads[myTeam].find(p => p.n === name);
-        
+    function confirmSelect(n, r) {
+        let p = squads[myTeam].find(x => x.n === n);
+        if(r === 'BAT') curBatObj = p; else curBowlObj = p;
         document.getElementById('selectorView').style.display = 'none';
         document.getElementById('gameArea').style.opacity = '1';
         updateDisplay();
     }
 
-    function setOpponentPlayer(role) {
-        let team = (role === 'BAT') ? ((innings === 1) ? myTeam : oppTeam) : ((innings === 1) ? oppTeam : myTeam);
-        if (team !== oppTeam) return;
-
-        let avail = squads[oppTeam].filter(p => role === 'BAT' ? !p.out : (p.r === 'BOWL' || p.r === 'AR'));
+    function setOpponent(role) {
+        let t = (role === 'BAT') ? (innings === 1 ? myTeam : oppTeam) : (innings === 1 ? oppTeam : myTeam);
+        if(t !== oppTeam) return;
+        let avail = squads[oppTeam].filter(p => role === 'BAT' ? !p.out : (p.r !== 'BAT'));
         let p = avail[Math.floor(Math.random()*avail.length)];
         if(role === 'BAT') curBatObj = p; else curBowlObj = p;
     }
 
     function handleTurn(val) {
-        if(!curBatObj || !curBowlObj) return;
-        let p1 = val, p2 = Math.floor(Math.random()*6)+1;
-        document.getElementById('mainBg').style.animation = "";
+        if(gameMode === "PVP" && p1Choice === null) {
+            p1Choice = val; document.getElementById('turnInfo').innerText = "PLAYER 2 TURN";
+            return;
+        }
+        let p1 = (gameMode === "CPU") ? val : p1Choice;
+        let p2 = (gameMode === "CPU") ? Math.floor(Math.random()*6)+1 : val;
+        p1Choice = null; document.getElementById('turnInfo').innerText = (gameMode==="PVP") ? "PLAYER 1 TURN" : "";
 
         if(p1 === p2) {
             wickets++; curBatObj.out = true; curBowlObj.wkts++;
-            document.getElementById('commBox').innerText = `OUT! ${curBatObj.n} is gone!`;
-            if(wickets < maxWkts) choosePlayer('BAT');
+            document.getElementById('commBox').innerText = "WICKET! OUT!";
+            if(wickets < 6) choosePlayer('BAT');
         } else {
-            let r = (innings === 1 && myTeam === myTeam) ? p1 : p2; // Simplified logic
-            score += p1; curBatObj.runs += p1; curBatObj.balls++;
+            score += p1; curBatObj.runs += p1; curBatObj.bF++;
             document.getElementById('commBox').innerText = `Scored ${p1} runs!`;
         }
-
         balls++;
-        if(balls % 5 === 0 && balls < maxBalls) choosePlayer('BOWL');
-        
-        if(innings === 2 && score >= target) finish("YOU WON!");
-        else if(balls >= maxBalls || wickets >= maxWkts) {
+        if(balls % 5 === 0 && balls < 100) choosePlayer('BOWL');
+        if(innings === 2 && score >= target) finish("BATTERS WIN!");
+        else if(balls >= 100 || wickets >= 6) {
             if(innings === 1) { target = score + 1; alert("TARGET: " + target); initInnings(2); }
-            else finish(score === target-1 ? "TIE!" : "MATCH OVER!");
+            else finish(score >= target ? "BATTERS WIN!" : "BOWLERS WIN!");
         }
         updateDisplay();
     }
@@ -194,21 +195,14 @@
 
     function updateDisplay() {
         document.getElementById('liveScore').innerText = `${score}/${wickets}`;
-        document.getElementById('ballsLeft').innerText = maxBalls - balls;
+        document.getElementById('ballsLeft').innerText = 100 - balls;
         document.getElementById('oversLeft').innerText = `${Math.floor(balls/5)}.${balls%5}`;
         document.getElementById('targetDisplay').innerText = target === Infinity ? "-" : target;
-        if(curBatObj) {
-            document.getElementById('curBatName').innerText = curBatObj.n;
-            document.getElementById('batStats').innerText = `${curBatObj.runs}(${curBatObj.balls})`;
-        }
-        if(curBowlObj) {
-            document.getElementById('curBowlName').innerText = curBowlObj.n;
-            document.getElementById('bowlStats').innerText = `Wkts: ${curBowlObj.wkts}`;
-        }
+        if(curBatObj) { document.getElementById('curBatName').innerText = curBatObj.n; document.getElementById('batStats').innerText = `${curBatObj.runs}(${curBatObj.bF})`; }
+        if(curBowlObj) { document.getElementById('curBowlName').innerText = curBowlObj.n; document.getElementById('bowlStats').innerText = `Wkts: ${curBowlObj.wkts}`; }
     }
 
     function finish(m) { alert(m); location.reload(); }
-    handleLogin();
 </script>
 </body>
 </html>
